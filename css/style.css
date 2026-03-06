@@ -1,0 +1,496 @@
+/**
+ * Основные стили приложения "Спортивные Игры"
+ * Использует Bootstrap 5 как базу
+ */
+
+/* ==================== Общие стили ==================== */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==================== Главный контейнер ==================== */
+.main-content {
+    flex: 1;
+    padding-bottom: 2rem;
+}
+
+/* ==================== Навигация ==================== */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+.dropdown-menu {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* ==================== Карточки ==================== */
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-img-top {
+    border-radius: 12px 12px 0 0;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* ==================== Карточки событий ==================== */
+.event-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card .badge-sport {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+.event-card .card-body {
+    padding: 1.5rem;
+}
+
+.event-card .event-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.event-card .event-location {
+    color: var(--secondary-color);
+}
+
+.event-card .participants-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.event-card .progress {
+    height: 8px;
+    border-radius: 10px;
+}
+
+/* ==================== Спортивные типы (цвета) ==================== */
+.sport-football {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.sport-volleyball {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.sport-basketball {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: white;
+}
+
+/* ==================== Кнопки ==================== */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* ==================== Формы ==================== */
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+/* ==================== Бейджи ==================== */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* Уровни сложности */
+.badge-beginner {
+    background-color: #28a745;
+}
+
+.badge-amateur {
+    background-color: #17a2b8;
+}
+
+.badge-advanced {
+    background-color: #fd7e14;
+}
+
+.badge-professional {
+    background-color: #dc3545;
+}
+
+/* Статусы событий */
+.badge-open {
+    background-color: #28a745;
+}
+
+.badge-closed {
+    background-color: #6c757d;
+}
+
+.badge-completed {
+    background-color: #17a2b8;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+}
+
+/* ==================== Рейтинг ==================== */
+.rating-stars {
+    color: #ffc107;
+}
+
+.user-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* ==================== Аватары ==================== */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+}
+
+.avatar-xl {
+    width: 120px;
+    height: 120px;
+}
+
+/* ==================== Списки участников ==================== */
+.participants-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.participant-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--light-color);
+    border-radius: 20px;
+}
+
+/* ==================== Фильтры ==================== */
+.filters-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-tag:hover {
+    transform: scale(1.05);
+}
+
+/* ==================== Комментарии ==================== */
+.comment-item {
+    padding: 1rem;
+    background-color: var(--light-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.comment-time {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+}
+
+.comment-text {
+    margin-top: 0.5rem;
+    color: var(--dark-color);
+}
+
+/* ==================== Уведомления ==================== */
+.notification-item {
+    padding: 1rem;
+    border-left: 4px solid var(--primary-color);
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+    background-color: var(--light-color);
+}
+
+.notification-item.unread {
+    background-color: #e7f1ff;
+}
+
+/* ==================== Пагинация ==================== */
+.pagination {
+    margin-top: 2rem;
+}
+
+.page-link {
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    color: var(--primary-color);
+    border: 2px solid var(--light-color);
+}
+
+.page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ==================== Подвал ==================== */
+footer {
+    margin-top: auto;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer a:hover {
+    color: white !important;
+}
+
+/* ==================== Кнопка "Наверх" ==================== */
+#scrollTopBtn {
+    transition: all 0.3s ease;
+}
+
+#scrollTopBtn:hover {
+    transform: translateY(-5px);
+}
+
+/* ==================== Карты (Maps) ==================== */
+.location-map {
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ==================== Статистика профиля ==================== */
+.stats-card {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.stats-card h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stats-card p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ==================== Анимации ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ==================== Загрузчик ==================== */
+.loader {
+    border: 4px solid var(--light-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==================== Адаптивность ==================== */
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 150px;
+    }
+    
+    .stats-card h3 {
+        font-size: 2rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding-bottom: 1rem;
+    }
+    
+    .filters-section {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* ==================== Дополнительные утилиты ==================== */
+.text-muted {
+    color: var(--secondary-color) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==================== Печать ==================== */
+@media print {
+    .navbar,
+    footer,
+    .btn,
+    #scrollTopBtn {
+        display: none;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

@@ -1,0 +1,70 @@
+# Зависимости и пакеты
+/vendor/
+composer.lock
+
+# Конфигурационные файлы (с паролями)
+/includes/config.local.php
+
+# Загруженные файлы
+/uploads/*
+!/uploads/.gitkeep
+
+# Логи
+*.log
+/logs/
+error_log
+
+# Временные файлы
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Кеш
+/cache/
+*.cache
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Файлы операционной системы
+*.DS_Store
+desktop.ini
+
+# PHP
+.phpunit.result.cache
+.phpcs-cache
+
+# Node modules (если используется npm)
+/node_modules/
+package-lock.json
+
+# Резервные копии
+*.bak
+*.backup
+*.sql.gz
+*.sql.zip
+
+# Документация (опционально)
+/docs/
+
+# Тестовые файлы
+/tests/
+phpunit.xml
+
+# Environment файлы
+.env
+.env.local
+.env.*.local
+
+# Сессии
+/sessions/
+
+# Compiled files
+*.compiled
