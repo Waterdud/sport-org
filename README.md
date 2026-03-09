@@ -163,23 +163,7 @@ Currently in **Estonian**. To add more languages:
 - `POST /ajax/add-comment` - Add event comment
 - `POST /ajax/mark-read` - Mark notification as read
 
-## 🚢 Deployment
 
-For production deployment:
-1. Set `DEBUG_MODE` to false in config.php
-2. Configure proper server with Apache/Nginx
-3. Update SITE_URL to production domain
-4. Set up proper file permissions
-5. Configure database backups
-6. Enable HTTPS
-
-## 📝 License
-
-This project is open source and available under the MIT license.
-
-## 👨‍💻 Author
-
-Sport-Org Development Team
 
 ---
 
