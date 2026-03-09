@@ -3,7 +3,7 @@
  * Добавление нового места - Lisa koht
  */
 
-require_once dirname(__DIR__, 3) . '/config/bootstrap.php';
+require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
 requireAuth();
 
 $pageTitle = 'Lisa koht';

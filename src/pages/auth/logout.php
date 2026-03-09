@@ -3,7 +3,7 @@
  * Выход из системы - Logi välja
  */
 
-require_once dirname(__DIR__, 3) . '/config/bootstrap.php';
+require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
 
 // Очищаем сессию
 session_destroy();
