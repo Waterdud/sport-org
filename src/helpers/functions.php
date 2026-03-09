@@ -34,7 +34,7 @@ function getCurrentUser() {
 function requireAuth() {
     if (!isLoggedIn()) {
         $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-        header('Location: ' . SITE_URL . '/auth/login.php');
+        header('Location: ' . SITE_URL . '/login');
         exit();
     }
 }

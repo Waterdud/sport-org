@@ -58,7 +58,7 @@ require_once BASE_PATH . '/src/components/Header.php';
 <!-- Фильтры -->
 <div class="card mb-4">
     <div class="card-body">
-        <form method="GET" action="<?php echo SITE_URL; ?>/src/pages/home.php" class="row g-3">
+        <form method="GET" action="/" class="row g-3">
             <div class="col-md-4">
                 <select name="sport" class="form-select">
                     <option value="">Kõik spordialad</option>
@@ -93,7 +93,7 @@ require_once BASE_PATH . '/src/components/Header.php';
         <h4>Üritusi ei leitud</h4>
         <p class="text-muted">Loo esimene üritus!</p>
         <?php if (isLoggedIn()): ?>
-            <a href="<?php echo SITE_URL; ?>/src/pages/events/create.php" class="btn btn-primary">
+            <a href="/events/create" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Loo üritus
             </a>
         <?php endif; ?>

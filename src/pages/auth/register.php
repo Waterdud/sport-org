@@ -8,7 +8,7 @@ require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
 $pageTitle = 'Registreeru';
 
 if (isLoggedIn()) {
-    redirect('/src/pages/home.php');
+    redirect('/');
 }
 
 $errors = [];
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)",
             [$username, $email, password_hash($password, PASSWORD_DEFAULT)]);
         
-        redirect('/src/pages/auth/login.php');
+        redirect('/login');
     }
 }
 
@@ -87,7 +87,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="register.php" novalidate>
+                <form method="POST" action="/register" novalidate>
                     <!-- Username -->
                     <div class="mb-3">
                         <label for="username" class="form-label">
@@ -156,7 +156,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                     
                     <!-- Link to Login -->
                     <div class="d-grid">
-                        <a href="login.php" class="btn btn-outline-primary btn-lg">
+                        <a href="/login" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-box-arrow-in-right me-2"></i>
                             Mul on juba konto
                         </a>

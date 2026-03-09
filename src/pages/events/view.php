@@ -8,7 +8,7 @@ require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
 $pageTitle = 'Ürituse vaatamine';
 
 $id = (int)($_GET['id'] ?? 0);
-if ($id === 0) redirect('list.php');
+if ($id === 0) redirect('/events');
 
 $event = fetchOne($pdo, 
     "SELECT e.*, u.username, l.name as location_name 
@@ -18,7 +18,7 @@ $event = fetchOne($pdo,
      WHERE e.id = ?", 
     [$id]);
 
-if (!$event) redirect('list.php');
+if (!$event) redirect('/events');
 
 require_once BASE_PATH . '/src/components/Header.php';
 ?>

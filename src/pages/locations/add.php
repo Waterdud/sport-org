@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         execute($pdo,
             "INSERT INTO locations (name, address, city, sport_types, description) VALUES (?, ?, ?, ?, ?)",
             [$name, $address, $city, $sportTypes, $description]);
-        redirect('list.php');
+        redirect('/locations');
     }
 }
 

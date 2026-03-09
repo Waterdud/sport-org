@@ -11,5 +11,5 @@ setcookie('PHPSESSID', '', time() - 3600, '/');
 setcookie('remember_user', '', time() - 3600, '/');
 
 // Редирект на главную
-redirect('/src/pages/home.php');
+redirect('/');
 ?>

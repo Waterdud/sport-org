@@ -14,7 +14,7 @@ $pageTitle = 'Sisselogimine';
 
 // Если пользователь уже авторизован
 if (isLoggedIn()) {
-    redirect('/src/pages/home.php');
+    redirect('/');
 }
 
 $errors = [];
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setcookie('remember_user', $user['id'], time() + (86400 * 30), '/');
             }
             
-            redirect('/src/pages/home.php');
+            redirect('/');
         }
     }
 }
@@ -85,7 +85,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="login.php" novalidate>
+                <form method="POST" action="/login" novalidate>
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label">
@@ -137,7 +137,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                     
                     <!-- Link registreerimisele -->
                     <div class="d-grid">
-                        <a href="register.php" class="btn btn-outline-primary btn-lg">
+                        <a href="/register" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-person-plus me-2"></i>
                             Loo uus konto
                         </a>

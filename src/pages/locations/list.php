@@ -60,7 +60,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                 Kohad mängimiseks
             </h2>
             <?php if (isLoggedIn()): ?>
-                <a href="add.php" class="btn btn-primary">
+                <a href="/locations/add" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Lisa koht
                 </a>
             <?php endif; ?>
@@ -71,7 +71,7 @@ require_once BASE_PATH . '/src/components/Header.php';
 <!-- Фильтры -->
 <div class="card shadow-sm mb-4">
     <div class="card-body">
-        <form method="GET" action="list.php" class="row g-3">
+        <form method="GET" action="/locations" class="row g-3">
             <!-- Поиск -->
             <div class="col-md-4">
                 <div class="input-group">
@@ -146,7 +146,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                            class="text-white ms-1">×</a>
                     </span>
                 <?php endif; ?>
-                <a href="list.php" class="btn btn-sm btn-outline-secondary">
+                <a href="/locations" class="btn btn-sm btn-outline-secondary">
                     <i class="bi bi-x-circle me-1"></i>Lähtesta
                 </a>
             </div>
@@ -162,7 +162,7 @@ require_once BASE_PATH . '/src/components/Header.php';
             <h4 class="text-muted">Kohti ei leitud</h4>
             <p class="text-muted mb-4">Proovi muuta otsingu parameetreid või lisa uus koht</p>
             <?php if (isLoggedIn()): ?>
-                <a href="add.php" class="btn btn-primary">
+                <a href="/locations/add" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Lisa koht
                 </a>
             <?php endif; ?>
@@ -253,7 +253,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                             
                             <!-- Кнопки -->
                             <div class="d-grid gap-2">
-                                <a href="<?php echo SITE_URL; ?>/src/pages/events/list.php?city=<?php echo urlencode($location['city']); ?>" 
+                                <a href="<?php echo SITE_URL; ?>/events?city=<?php echo urlencode($location['city']); ?>" 
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-calendar-event me-2"></i>
                                     Leia siit üritusi

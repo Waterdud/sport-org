@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Открыто')",
             [getCurrentUserId(), $title, $sportType, $locationId, $eventDate, $eventTime, $maxParticipants, $skillLevel, $description]
         );
-        redirect('list.php');
+        redirect('/events');
     }
 }
 

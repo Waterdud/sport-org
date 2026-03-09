@@ -50,7 +50,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                     <div class="card-body">
                         <h5><?php echo clean($event['title']); ?></h5>
                         <p><?php echo formatDateEt($event['event_date']); ?></p>
-                        <a href="view.php?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-primary">Vaata</a>
+                        <a href="/events/view?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-primary">Vaata</a>
                     </div>
                 </div>
             </div>

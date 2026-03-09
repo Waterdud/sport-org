@@ -17,6 +17,9 @@ if ($basePath && strpos($path, $basePath) === 0) {
     $path = substr($path, strlen($basePath));
 }
 
+// Remove .php extension if present (for direct .php file requests)
+$path = preg_replace('/\.php$/', '', $path);
+
 // Simple routing
 switch ($path) {
     // Home
@@ -27,18 +30,22 @@ switch ($path) {
         break;
     
     // Auth
+    case 'auth/login':
     case 'login':
         require_once BASE_PATH . '/src/pages/auth/login.php';
         break;
+    case 'auth/register':
     case 'register':
         require_once BASE_PATH . '/src/pages/auth/register.php';
         break;
+    case 'auth/logout':
     case 'logout':
         require_once BASE_PATH . '/src/pages/auth/logout.php';
         break;
     
     // Events
     case 'events':
+    case 'events/list':
         require_once BASE_PATH . '/src/pages/events/list.php';
         break;
     case 'events/create':
@@ -53,6 +60,7 @@ switch ($path) {
     
     // Locations
     case 'locations':
+    case 'locations/list':
         require_once BASE_PATH . '/src/pages/locations/list.php';
         break;
     case 'locations/add':
@@ -60,9 +68,11 @@ switch ($path) {
         break;
     
     // User
+    case 'user/profile':
     case 'profile':
         require_once BASE_PATH . '/src/pages/user/profile.php';
         break;
+    case 'user/notifications':
     case 'notifications':
         require_once BASE_PATH . '/src/pages/user/notifications.php';
         break;
