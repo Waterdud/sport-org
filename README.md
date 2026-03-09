@@ -2,11 +2,7 @@
 
 A clean, modern PHP application for organizing sports events and finding training partners.
 
-## 🚀 Quick Start
 
-### Prerequisites
-- PHP 7.4+
-- SQLite3
 
 ### Installation
 
@@ -57,18 +53,6 @@ sport-org/
 └── .htaccess              # Apache configuration
 
 ```
-
-## 🔧 Configuration
-
-Configuration is located in `src/config/config.php`:
-
-- **Database**: SQLite (sport_events.db)
-- **Site URL**: http://localhost:8000
-- **Language**: Estonian (et)
-- **Session Lifetime**: 24 hours
-- **Timezone**: Europe/Moscow
-
-## 🎯 Features
 
 ### User Authentication
 - User registration with email validation
