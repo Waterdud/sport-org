@@ -51,14 +51,14 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                     
                     <!-- Treeningud (Events) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo SITE_URL; ?>/events/list.php">
+                        <a class="nav-link" href="<?php echo SITE_URL; ?>/events">
                             <i class="bi bi-calendar-event me-1"></i> Treeningud
                         </a>
                     </li>
                     
                     <!-- Kohad (Locations) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo SITE_URL; ?>/locations/list.php">
+                        <a class="nav-link" href="<?php echo SITE_URL; ?>/locations">
                             <i class="bi bi-geo-alt me-1"></i> Kohad
                         </a>
                     </li>
@@ -66,21 +66,21 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                     <?php if ($isLoggedIn): ?>
                         <!-- Loo üritus (Create Event) -->
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo SITE_URL; ?>/events/create.php">
+                            <a class="nav-link" href="<?php echo SITE_URL; ?>/events/create">
                                 <i class="bi bi-plus-circle me-1"></i> Loo üritus
                             </a>
                         </li>
                         
                         <!-- Minu treeningud (My Events) -->
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo SITE_URL; ?>/events/my.php">
+                            <a class="nav-link" href="<?php echo SITE_URL; ?>/events/my">
                                 <i class="bi bi-calendar-check me-1"></i> Minu treeningud
                             </a>
                         </li>
                         
                         <!-- Teated (Notifications) -->
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo SITE_URL; ?>/user/notifications.php">
+                            <a class="nav-link" href="<?php echo SITE_URL; ?>/notifications">
                                 <i class="bi bi-bell me-1"></i> 
                                 <span id="notificationCount" class="badge bg-danger">0</span>
                             </a>
@@ -92,11 +92,11 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                                 <i class="bi bi-person-circle me-1"></i> <?php echo clean($currentUser['username']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/user/profile.php">
+                                <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/profile">
                                     <i class="bi bi-person me-2"></i> Profiil
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/auth/logout.php">
+                                <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/logout">
                                     <i class="bi bi-box-arrow-right me-2"></i> Logi välja
                                 </a></li>
                             </ul>

@@ -47,18 +47,18 @@
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="<?php echo SITE_URL; ?>/events/list.php" class="text-white-50 text-decoration-none">
+                            <a href="<?php echo SITE_URL; ?>/events" class="text-white-50 text-decoration-none">
                                 <i class="bi bi-chevron-right"></i> Treeningud
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="<?php echo SITE_URL; ?>/locations/list.php" class="text-white-50 text-decoration-none">
+                            <a href="<?php echo SITE_URL; ?>/locations" class="text-white-50 text-decoration-none">
                                 <i class="bi bi-chevron-right"></i> Kohad
                             </a>
                         </li>
                         <?php if (isLoggedIn()): ?>
                         <li class="mb-2">
-                            <a href="<?php echo SITE_URL; ?>/user/profile.php" class="text-white-50 text-decoration-none">
+                            <a href="<?php echo SITE_URL; ?>/profile" class="text-white-50 text-decoration-none">
                                 <i class="bi bi-chevron-right"></i> Profiil
                             </a>
                         </li>
@@ -100,7 +100,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const notificationCountEl = document.getElementById('notificationCount');
             if (notificationCountEl) {
-                fetch('<?php echo SITE_URL; ?>/ajax/get_unread_count.php')
+                fetch('<?php echo SITE_URL; ?>/ajax/unread-count')
                     .then(r => r.json())
                     .then(d => {
                         if (d.count > 0) {
