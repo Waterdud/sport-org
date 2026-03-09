@@ -8,8 +8,7 @@
  * - Поиск по названию
  */
 
-require_once 'includes/db.php';
-require_once 'includes/functions.php';
+require_once dirname(__DIR__, 3) . '/config/bootstrap.php';
 
 $pageTitle = 'Kohad mängimiseks';
 
@@ -49,7 +48,7 @@ $locations = fetchAll($pdo, $sql, $params);
 // Список городов для фильтра
 $cities = fetchAll($pdo, "SELECT DISTINCT city FROM locations ORDER BY city");
 
-require_once 'includes/header.php';
+require_once BASE_PATH . '/src/components/Header.php';
 ?>
 
 <!-- Заголовок -->
@@ -61,7 +60,7 @@ require_once 'includes/header.php';
                 Kohad mängimiseks
             </h2>
             <?php if (isLoggedIn()): ?>
-                <a href="add_location.php" class="btn btn-primary">
+                <a href="add.php" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Lisa koht
                 </a>
             <?php endif; ?>
@@ -72,7 +71,7 @@ require_once 'includes/header.php';
 <!-- Фильтры -->
 <div class="card shadow-sm mb-4">
     <div class="card-body">
-        <form method="GET" action="locations.php" class="row g-3">
+        <form method="GET" action="list.php" class="row g-3">
             <!-- Поиск -->
             <div class="col-md-4">
                 <div class="input-group">
@@ -147,7 +146,7 @@ require_once 'includes/header.php';
                            class="text-white ms-1">×</a>
                     </span>
                 <?php endif; ?>
-                <a href="locations.php" class="btn btn-sm btn-outline-secondary">
+                <a href="list.php" class="btn btn-sm btn-outline-secondary">
                     <i class="bi bi-x-circle me-1"></i>Lähtesta
                 </a>
             </div>
@@ -163,7 +162,7 @@ require_once 'includes/header.php';
             <h4 class="text-muted">Kohti ei leitud</h4>
             <p class="text-muted mb-4">Proovi muuta otsingu parameetreid või lisa uus koht</p>
             <?php if (isLoggedIn()): ?>
-                <a href="add_location.php" class="btn btn-primary">
+                <a href="add.php" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Lisa koht
                 </a>
             <?php endif; ?>
@@ -181,7 +180,7 @@ require_once 'includes/header.php';
             // Подсчёт предстоящих событий в этой локации
             $eventsCountResult = fetchOne($pdo, 
                 "SELECT COUNT(*) as count FROM events 
-                 WHERE location_id = ? AND status = 'active' AND event_date >= DATE('now')",
+                 WHERE location_id = ? AND status = 'Открыто' AND event_date >= DATE('now')",
                 [$location['id']]
             );
             $eventsCount = $eventsCountResult ? $eventsCountResult['count'] : 0;
@@ -193,12 +192,13 @@ require_once 'includes/header.php';
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 shadow-sm">
                     <?php if (!empty($location['image'])): ?>
-                        <img src="uploads/locations/<?php echo clean($location['image']); ?>" 
+                        <img src="<?php echo SITE_URL; ?>/uploads/locations/<?php echo clean($location['image']); ?>" 
                              class="card-img-top" 
-                             alt="<?php echo clean($location['name']); ?>">
+                             alt="<?php echo clean($location['name']); ?>"
+                             style="height: 250px; object-fit: cover;">
                     <?php else: ?>
                         <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                             style="height: 200px;">
+                             style="height: 250px;">
                             <i class="bi bi-geo-alt display-1 text-muted"></i>
                         </div>
                     <?php endif; ?>
@@ -253,7 +253,7 @@ require_once 'includes/header.php';
                             
                             <!-- Кнопки -->
                             <div class="d-grid gap-2">
-                                <a href="index.php?city=<?php echo urlencode($location['city']); ?>" 
+                                <a href="<?php echo SITE_URL; ?>/src/pages/events/list.php?city=<?php echo urlencode($location['city']); ?>" 
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-calendar-event me-2"></i>
                                     Leia siit üritusi
@@ -296,7 +296,7 @@ require_once 'includes/header.php';
                             <i class="bi bi-people text-primary display-4 mb-3"></i>
                             <h5>Mugav kõigile</h5>
                             <p class="text-muted small mb-0">
-                                Lisa oma lemmikkohti ja jaga neid kogukonnaga
+                                Lisa oma lemmikkohti ja jaa neid kogukonnaga
                             </p>
                         </div>
                     </div>
@@ -306,4 +306,4 @@ require_once 'includes/header.php';
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/src/components/Footer.php'; ?>
