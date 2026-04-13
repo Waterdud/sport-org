@@ -12,7 +12,9 @@ $sql = "SELECT e.*, u.username, l.name as location_name
         FROM events e 
         JOIN users u ON e.creator_id = u.id 
         LEFT JOIN locations l ON e.location_id = l.id 
-        WHERE e.status = 'Открыто' AND e.event_date >= DATE('now')
+        WHERE e.status NOT IN ('cancelled') 
+          AND (e.event_date > DATE('now') 
+               OR (e.event_date = DATE('now') AND e.event_time > TIME('now')))
         ORDER BY e.event_date ASC";
 
 $events = fetchAll($pdo, $sql, []);

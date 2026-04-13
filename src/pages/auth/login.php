@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = fetchOne($pdo, "SELECT * FROM users WHERE email = ?", [$email]);
         
         // Проверка пароля
-        if (!$user || !password_verify($password, $user['password_hash'])) {
+        if (!$user || !password_verify($password, $user['password'] ?? '')) {
             $errors[] = 'Vale e-post või parool';
         } else {
             // Успешная авторизация

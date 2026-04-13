@@ -1,64 +1,68 @@
 <?php
 /**
- * Главная точка входа приложения SportOrg
+ * Application entry point
  * 
- * Этот файл должен быть в корне /public/ или /
- * Маршрутизирует все запросы на нужные страницы
+ * Route all requests to appropriate pages
  */
 
-// Подключаем bootstrap
+// Load bootstrap
 require_once __DIR__ . '/src/config/bootstrap.php';
 
-// Определяем текущую страницу из URL
+// Get page from URL
 $page = $_GET['page'] ?? 'home';
 $action = $_GET['action'] ?? 'list';
 
-// Безопасность - очищаем параметры
+// Security - sanitize parameters
 $page = preg_replace('/[^a-z0-9_-]/', '', strtolower($page));
 $action = preg_replace('/[^a-z0-9_-]/', '', strtolower($action));
 
-// Маршруты
+// Routes
 $routes = [
-    // Главная
+    // Main
     'home' => BASE_PATH . '/src/pages/home.php',
     
-    // Аутентификация
+    // Auth
     'login' => BASE_PATH . '/src/pages/auth/login.php',
     'register' => BASE_PATH . '/src/pages/auth/register.php',
     'logout' => BASE_PATH . '/src/pages/auth/logout.php',
     
-    // События/Тренировки
+    // Events
     'events' => BASE_PATH . '/src/pages/events/list.php',
     'event-create' => BASE_PATH . '/src/pages/events/create.php',
     'event-view' => BASE_PATH . '/src/pages/events/view.php',
     'event-my' => BASE_PATH . '/src/pages/events/my.php',
     
-    // Локации/Места
+    // Locations
     'locations' => BASE_PATH . '/src/pages/locations/list.php',
     'location-add' => BASE_PATH . '/src/pages/locations/add.php',
     
-    // Пользователь
+    // User
     'profile' => BASE_PATH . '/src/pages/user/profile.php',
     'notifications' => BASE_PATH . '/src/pages/user/notifications.php',
+    
+    // Admin
+    'admin-dashboard' => BASE_PATH . '/src/pages/admin/dashboard.php',
+    'admin-users' => BASE_PATH . '/src/pages/admin/users.php',
+    'admin-events' => BASE_PATH . '/src/pages/admin/events.php',
 ];
 
 // Ищем маршрут
 $filePath = $routes[$page] ?? BASE_PATH . '/src/pages/home.php';
 
-// Проверяем существование файла
+// Check if file exists
 if (file_exists($filePath)) {
     require_once $filePath;
 } else {
-    // Файл не найден - показываем 404
+    // File not found - show 404
     header('HTTP/1.0 404 Not Found');
     require_once BASE_PATH . '/src/components/Header.php';
     ?>
     <div class="text-center py-5">
         <h1 class="display-1">404</h1>
-        <h2>Leht ei leitud</h2>
-        <p class="text-muted">Kahjuks ei leidnud otsitud lehte.</p>
+        <h2>Page Not Found</h2>
+        <p class="text-muted">The requested page could not be found.</p>
         <a href="<?php echo SITE_URL; ?>" class="btn btn-primary">
-            Tagasi avalehele
+            Back home
         </a>
     </div>
     <?php

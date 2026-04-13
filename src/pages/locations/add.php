@@ -67,15 +67,15 @@ require_once BASE_PATH . '/src/components/Header.php';
                     <label class="form-label">Spordialad</label>
                     <div class="form-check">
                         <input type="checkbox" name="sports[]" value="Футбол" class="form-check-input" id="football">
-                        <label class="form-check-label" for="football">⚽ Jalgpall</label>
+                        <label class="form-check-label" for="football">Jalgpall</label>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" name="sports[]" value="Волейбол" class="form-check-input" id="volleyball">
-                        <label class="form-check-label" for="volleyball">🏐 Võrkpall</label>
+                        <label class="form-check-label" for="volleyball">Võrkpall</label>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" name="sports[]" value="Баскетбол" class="form-check-input" id="basketball">
-                        <label class="form-check-label" for="basketball">🏀 Korvpall</label>
+                        <label class="form-check-label" for="basketball">Korvpall</label>
                     </div>
                 </div>
                 

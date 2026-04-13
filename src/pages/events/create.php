@@ -5,6 +5,7 @@
 
 require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
 requireAuth();
+require_once BASE_PATH . '/src/services/ParticipationService.php';
 
 $pageTitle = 'Loo üritus';
 
@@ -38,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['create_location'])) 
     $maxParticipants = (int)($_POST['max_participants'] ?? 0);
     $description = trim($_POST['description'] ?? '');
     $skillLevel = $_POST['skill_level'] ?? 'Algaja';
+    $durationMinutes = (int)($_POST['duration'] ?? 60);
     
     // Валидация
     if (empty($title)) $errors[] = 'Pealkiri on kohustuslik';
@@ -45,14 +47,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['create_location'])) 
     if (empty($eventTime)) $errors[] = 'Kellaaeg on kohustuslik';
     if ($maxParticipants < 2) $errors[] = 'Minimaalne osalejaate arv on 2';
     if (empty($sportType)) $errors[] = 'Spordialad on kohustuslik';
+    if (empty($locationId)) $errors[] = 'Koha valimine on kohustuslik';
     
     if (empty($errors)) {
         execute($pdo,
-            "INSERT INTO events (creator_id, title, sport_type, location_id, event_date, event_time, max_participants, skill_level, description, status)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Avatud')",
-            [getCurrentUserId(), $title, $sportType, $locationId, $eventDate, $eventTime, $maxParticipants, $skillLevel, $description]
+            "INSERT INTO events (creator_id, title, sport_type, location_id, event_date, event_time, max_participants, skill_level, description, status, duration_minutes, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'planned', ?, CURRENT_TIMESTAMP)",
+            [getCurrentUserId(), $title, $sportType, $locationId, $eventDate, $eventTime, $maxParticipants, $skillLevel, $description, $durationMinutes]
         );
-        redirect('/events');
+        
+        $eventId = lastInsertId($pdo);
+        
+        // Auto-join creator as GOING
+        $participationService = new ParticipationService($pdo);
+        $participationService->joinGame(getCurrentUserId(), $eventId, 'going');
+        
+        redirect('/src/pages/events/view.php?id=' . $eventId);
     }
 }
 
@@ -102,25 +112,28 @@ require_once BASE_PATH . '/src/components/Header.php';
                             </label>
                             <select name="sport_type" class="form-select form-select-lg" required>
                                 <option value="">Vali spordialad...</option>
-                                <option value="Jalgpall">⚽ Jalgpall</option>
-                                <option value="Võrkpall">🏐 Võrkpall</option>
-                                <option value="Korvpall">🏀 Korvpall</option>
-                                <option value="Tennis">🎾 Tennis</option>
-                                <option value="Ujumine">🏊 Ujumine</option>
+                                <option value="Jalgpall">Jalgpall</option>
+                                <option value="Võrkpall">Võrkpall</option>
+                                <option value="Korvpall">Korvpall</option>
+                                <option value="Tennis">Tennis</option>
+                                <option value="Ujumine">Ujumine</option>
                             </select>
                         </div>
 
-                        <!-- Koht -->
+                        <!-- Коhe -->
                         <div class="mb-3">
-                            <label class="form-label fw-bold">
-                                <i class="bi bi-geo-alt me-1"></i>Koht
-                            </label>
-                            <select name="location_id" class="form-select form-select-lg">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label fw-bold mb-0">
+                                    <i class="bi bi-geo-alt me-1"></i>Koht <span class="text-danger">*</span>
+                                </label>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#newLocationModal">
+                                    <i class="bi bi-plus-circle me-1"></i>Lisa uus
+                                </button>
+                            </div>
+                            <select name="location_id" class="form-select form-select-lg" id="locationSelect" required>
                                 <option value="">Vali olemasolev koht...</option>
                                 <?php foreach ($locations as $loc): ?>
-                                    <option value="<?php echo $loc['id']; ?>">
-                                        <?php echo clean($loc['name']); ?> (<?php echo clean($loc['city']); ?>)
-                                    </option>
+                                    <option value="<?php echo $loc['id']; ?>"><?php echo clean($loc['name']); ?> (<?php echo clean($loc['city']); ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                             <small class="form-text text-muted">Koha saad valida või luua uue</small>
@@ -156,11 +169,18 @@ require_once BASE_PATH . '/src/components/Header.php';
                                     <i class="bi bi-award me-1"></i>Taseme
                                 </label>
                                 <select name="skill_level" class="form-select form-select-lg">
-                                    <option value="Algaja">🟢 Algaja</option>
-                                    <option value="Keskmine" selected>🟡 Keskmine</option>
-                                    <option value="Areneb">🔵 Areneb</option>
-                                    <option value="Professionaal">🔴 Professionaal</option>
+                                    <option value="Algaja">Algaja (Beginner)</option>
+                                    <option value="Keskmine" selected>Keskmine (Intermediate)</option>
+                                    <option value="Areneb">Areneb (Developing)</option>
+                                    <option value="Professionaal">Professionaal (Professional)</option>
                                 </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-hourglass me-1"></i>Kestus (minutid)
+                                </label>
+                                <input type="number" name="duration" class="form-control form-control-lg" 
+                                       value="60" min="30" max="240">
                             </div>
                         </div>
 
@@ -196,47 +216,103 @@ require_once BASE_PATH . '/src/components/Header.php';
     </div>
 </div>
 
-<!-- Offcanvas: Loo uus koht -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="newLocationCanvas">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title">
-            <i class="bi bi-geo-alt me-2"></i>Lisa uus koht
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
-    <div class="offcanvas-body">
-        <form method="POST">
-            <input type="hidden" name="create_location" value="1">
-            
-            <div class="mb-3">
-                <label class="form-label fw-bold">Koha nimi <span class="text-danger">*</span></label>
-                <input type="text" name="location_name" class="form-control" 
-                       placeholder="nt. Tallinna Linnastaadion" required>
+<!-- Modal: Loo uus koht -->
+<div class="modal fade" id="newLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-geo-alt me-2"></i>Lisa uus treenigukohtt
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            <form method="POST" id="newLocationForm">
+                <div class="modal-body">
+                    <input type="hidden" name="create_location" value="1">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Koha nimi <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="location_name" class="form-control" 
+                               placeholder="nt. Tallinna Linnastaadion" required>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">Aadress <span class="text-danger">*</span></label>
-                <input type="text" name="location_address" class="form-control" 
-                       placeholder="nt. Jakobi 2" required>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Aadress <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="location_address" class="form-control" 
+                               placeholder="nt. Jakobi 2, Tallinn" required>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">Linn <span class="text-danger">*</span></label>
-                <select name="location_city" class="form-select" required>
-                    <option value="">Vali linn...</option>
-                    <option value="Tallinn">Tallinn</option>
-                    <option value="Tartu">Tartu</option>
-                    <option value="Pärnu">Pärnu</option>
-                    <option value="Narva">Narva</option>
-                    <option value="Rakvere">Rakvere</option>
-                </select>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Linn <span class="text-danger">*</span>
+                        </label>
+                        <select name="location_city" class="form-select" required>
+                            <option value="">Vali linn...</option>
+                            <option value="Tallinn">🏙️ Tallinn</option>
+                            <option value="Tartu">🏫 Tartu</option>
+                            <option value="Pärnu">🏖️ Pärnu</option>
+                            <option value="Narva">🏛️ Narva</option>
+                            <option value="Rakvere">🏞️ Rakvere</option>
+                            <option value="Haapsalu">⛵ Haapsalu</option>
+                            <option value="Kuressaare">🏝️ Kuressaare</option>
+                        </select>
+                    </div>
 
-            <button type="submit" class="btn btn-success w-100">
-                <i class="bi bi-check-circle me-2"></i>Salvesta
-            </button>
-        </form>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Kirjeldus
+                        </label>
+                        <textarea name="location_description" class="form-control" rows="3"
+                                  placeholder="Lisa koha kirjeldus, nt. sisseseadmine, eriolevused jne."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Spordialad
+                        </label>
+                        <input type="text" name="location_sport_types" class="form-control" 
+                               placeholder="nt. Jalgpall, Võrkpall" value="Jalgpall">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Tühista
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Salvesta koht
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<!-- JavaScript для управления формой -->
+<script>
+document.getElementById('newLocationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Закрыть модаль
+        const modal = bootstrap.Modal.getInstance(document.getElementById('newLocationModal'));
+        if (modal) modal.hide();
+        
+        // Перезагрузить страницу для обновления селекта
+        setTimeout(() => location.reload(), 500);
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
 
 <?php require_once BASE_PATH . '/src/components/Footer.php'; ?>

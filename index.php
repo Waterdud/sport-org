@@ -3,101 +3,102 @@
  * SportOrg - Main Entry Point
  * 
  * Development environment entry point
- * Redirects to the appropriate page based on request
+ * Supports both PATH-based and QUERY-based routing
  */
 
 require_once __DIR__ . '/src/config/bootstrap.php';
 
-// Parse request
-$path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+// Support query parameter routing (?page=login)
+if (isset($_GET['page'])) {
+    $page = preg_replace('/[^a-z0-9_-]/', '', strtolower($_GET['page']));
+} else {
+    // Parse request path for PATH-based routing (/login, /events, etc)
+    $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-// Remove base path if present
-$basePath = trim(parse_url(SITE_URL, PHP_URL_PATH), '/');
-if ($basePath && strpos($path, $basePath) === 0) {
-    $path = substr($path, strlen($basePath));
+    // Remove base path if present
+    $basePath = trim(parse_url(SITE_URL, PHP_URL_PATH), '/');
+    if ($basePath && strpos($path, $basePath) === 0) {
+        $path = substr($path, strlen($basePath));
+    }
+
+    // Remove .php extension if present (for direct .php file requests)
+    $path = preg_replace('/\.php$/', '', $path);
+    
+    // Map path to page parameter
+    $pathToPage = [
+        '' => 'home',
+        '/' => 'home',
+        'home' => 'home',
+        'auth/login' => 'login',
+        'login' => 'login',
+        'auth/register' => 'register',
+        'register' => 'register',
+        'auth/logout' => 'logout',
+        'logout' => 'logout',
+        'events' => 'events',
+        'events/list' => 'events',
+        'events/create' => 'event-create',
+        'events/my' => 'event-my',
+        'events/view' => 'event-view',
+        'locations' => 'locations',
+        'locations/list' => 'locations',
+        'locations/add' => 'location-add',
+        'user/profile' => 'profile',
+        'profile' => 'profile',
+        'user/notifications' => 'notifications',
+        'notifications' => 'notifications',
+        'leaderboard' => 'leaderboard',
+        'upcoming' => 'upcoming',
+        'ajax/join-event' => 'ajax-join',
+        'ajax/leave-event' => 'ajax-leave',
+        'ajax/unread-count' => 'ajax-unread',
+        'ajax/add-comment' => 'ajax-comment',
+        'ajax/mark-read' => 'ajax-mark-read',
+        'admin-dashboard' => 'admin-dashboard',
+        'admin-users' => 'admin-users',
+        'admin-events' => 'admin-events',
+    ];
+    
+    $page = $pathToPage[$path] ?? 'home';
 }
 
-// Remove .php extension if present (for direct .php file requests)
-$path = preg_replace('/\.php$/', '', $path);
+// Route mapping
+$routes = [
+    'home' => BASE_PATH . '/src/pages/home.php',
+    'login' => BASE_PATH . '/src/pages/auth/login.php',
+    'register' => BASE_PATH . '/src/pages/auth/register.php',
+    'logout' => BASE_PATH . '/src/pages/auth/logout.php',
+    'events' => BASE_PATH . '/src/pages/events/list.php',
+    'event-create' => BASE_PATH . '/src/pages/events/create.php',
+    'event-view' => BASE_PATH . '/src/pages/events/view.php',
+    'event-my' => BASE_PATH . '/src/pages/events/my.php',
+    'locations' => BASE_PATH . '/src/pages/locations/list.php',
+    'location-add' => BASE_PATH . '/src/pages/locations/add.php',
+    'profile' => BASE_PATH . '/src/pages/user/profile.php',
+    'notifications' => BASE_PATH . '/src/pages/user/notifications.php',
+    'leaderboard' => BASE_PATH . '/src/pages/leaderboard.php',
+    'upcoming' => BASE_PATH . '/src/pages/upcoming.php',
+    'admin-dashboard' => BASE_PATH . '/src/pages/admin/dashboard.php',
+    'admin-users' => BASE_PATH . '/src/pages/admin/users.php',
+    'admin-events' => BASE_PATH . '/src/pages/admin/events.php',
+];
 
-// Simple routing
-switch ($path) {
-    // Home
-    case '':
-    case '/':
-    case 'home':
-        require_once BASE_PATH . '/src/pages/home.php';
-        break;
-    
-    // Auth
-    case 'auth/login':
-    case 'login':
-        require_once BASE_PATH . '/src/pages/auth/login.php';
-        break;
-    case 'auth/register':
-    case 'register':
-        require_once BASE_PATH . '/src/pages/auth/register.php';
-        break;
-    case 'auth/logout':
-    case 'logout':
-        require_once BASE_PATH . '/src/pages/auth/logout.php';
-        break;
-    
-    // Events
-    case 'events':
-    case 'events/list':
-        require_once BASE_PATH . '/src/pages/events/list.php';
-        break;
-    case 'events/create':
-        require_once BASE_PATH . '/src/pages/events/create.php';
-        break;
-    case 'events/my':
-        require_once BASE_PATH . '/src/pages/events/my.php';
-        break;
-    case 'events/view':
-        require_once BASE_PATH . '/src/pages/events/view.php';
-        break;
-    
-    // Locations
-    case 'locations':
-    case 'locations/list':
-        require_once BASE_PATH . '/src/pages/locations/list.php';
-        break;
-    case 'locations/add':
-        require_once BASE_PATH . '/src/pages/locations/add.php';
-        break;
-    
-    // User
-    case 'user/profile':
-    case 'profile':
-        require_once BASE_PATH . '/src/pages/user/profile.php';
-        break;
-    case 'user/notifications':
-    case 'notifications':
-        require_once BASE_PATH . '/src/pages/user/notifications.php';
-        break;
-    
-    // AJAX
-    case 'ajax/join-event':
-        require_once BASE_PATH . '/src/ajax/join_event.php';
-        break;
-    case 'ajax/leave-event':
-        require_once BASE_PATH . '/src/ajax/leave_event.php';
-        break;
-    case 'ajax/unread-count':
-        require_once BASE_PATH . '/src/ajax/get_unread_count.php';
-        break;
-    case 'ajax/add-comment':
-        require_once BASE_PATH . '/src/ajax/add_comment.php';
-        break;
-    case 'ajax/mark-read':
-        require_once BASE_PATH . '/src/ajax/mark_notification_read.php';
-        break;
-    
-    // 404
-    default:
-        http_response_code(404);
-        echo "404 - Lehekülg ei leitud";
-        break;
+// Load the appropriate page
+$filePath = $routes[$page] ?? BASE_PATH . '/src/pages/home.php';
+
+if (file_exists($filePath)) {
+    require_once $filePath;
+} else {
+    http_response_code(404);
+    require_once BASE_PATH . '/src/components/Header.php';
+    ?>
+    <div class="text-center py-5">
+        <h1 class="display-1">404</h1>
+        <h2>Page Not Found</h2>
+        <p class="text-muted">The requested page could not be found.</p>
+        <a href="<?php echo SITE_URL; ?>" class="btn btn-primary">Back home</a>
+    </div>
+    <?php
+    require_once BASE_PATH . '/src/components/Footer.php';
 }
 ?>

@@ -1,29 +1,21 @@
 <?php
 /**
- * BOOTSTRAP - Инициализация приложения
+ * Bootstrap application initialization
  * 
- * Подключи в начале каждого PHP файла:
+ * Include at the start of every PHP file:
  * require_once dirname(__DIR__) . '/config/bootstrap.php';
  */
 
-// Определяем базовую папку
+// Define base directory
 $rootDir = dirname(__DIR__, 2);
 
-// Подключаем конфиг
+// Load config
 require_once $rootDir . '/src/config/config.php';
 
-// Подключаем помощников
+// Load helpers
 require_once $rootDir . '/src/helpers/functions.php';
 
-// Подключаем БД (старая версия для совместимости)
-// require_once $rootDir . '/includes/db.php';
-
-// Если используется старая БД структура, подключим её
-if (file_exists($rootDir . '/includes/db.php')) {
-    require_once $rootDir . '/includes/db.php';
-}
-
-// Убедимся, что PDO подключена
+// Ensure PDO is connected
 if (!isset($pdo)) {
     try {
         $dbPath = $rootDir . '/database/sport_events.db';
@@ -37,7 +29,7 @@ if (!isset($pdo)) {
     }
 }
 
-// Устанавливаем обработчик ошибок
+// Set error handler
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
     if (DEBUG_MODE) {
         echo "<pre style='background:#fee;padding:10px;margin:10px;'>
@@ -48,7 +40,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     return true;
 });
 
-// Функции для работы с БД (из старого db.php)
+// Database helper functions
 if (!function_exists('fetchOne')) {
     function fetchOne($pdo, $sql, $params = []) {
         $stmt = $pdo->prepare($sql);
@@ -76,6 +68,30 @@ if (!function_exists('lastInsertId')) {
     function lastInsertId($pdo) {
         return $pdo->lastInsertId();
     }
+}
+
+// Load service classes
+if (!function_exists('loadServices')) {
+    function loadServices() {
+        $rootDir = dirname(__DIR__, 2);
+        $services = [
+            'RatingService.php',
+            'GameStatusService.php',
+            'ParticipationService.php',
+            'NotificationService.php',
+            'FollowService.php',
+            'AnalyticsService.php',
+            'ReminderService.php'
+        ];
+        
+        foreach ($services as $service) {
+            $path = $rootDir . '/src/services/' . $service;
+            if (file_exists($path)) {
+                require_once $path;
+            }
+        }
+    }
+    loadServices();
 }
 
 // Готово!

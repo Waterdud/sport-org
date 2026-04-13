@@ -4,16 +4,20 @@
  */
 
 require_once dirname(__DIR__, 3) . '/src/config/bootstrap.php';
+require_once BASE_PATH . '/src/services/AnalyticsService.php';
+require_once BASE_PATH . '/src/services/FollowService.php';
 requireAuth();
 
 $pageTitle = 'Profiil';
 $user = getCurrentUser();
 
-// Get user statistics
-$createdEvents = fetchAll($pdo, "SELECT COUNT(*) as count FROM events WHERE creator_id = ?", [$user['id']]);
-$joinedEvents = fetchAll($pdo, "SELECT COUNT(*) as count FROM event_participants WHERE user_id = ?", [$user['id']]);
-$totalEvents = $createdEvents[0]['count'] ?? 0;
-$joinedCount = $joinedEvents[0]['count'] ?? 0;
+// Use analytics service for stats
+$analyticsService = new AnalyticsService($pdo);
+$stats = $analyticsService->getUserStats($user['id']);
+
+$totalEvents = $stats['games_organized'];
+$joinedCount = $stats['games_attended'];
+$userRating = $user['reliability_rating'] ?? 5.0;
 
 // Get user's recent events
 $recentEvents = fetchAll($pdo, 
@@ -88,7 +92,7 @@ require_once BASE_PATH . '/src/components/Header.php';
                                     <h6 class="text-muted mb-0">Reiting</h6>
                                     <div class="mt-2">
                                         <?php 
-                                        $rating = $user['rating'] ?? 5;
+                                        $rating = $userRating;
                                         for ($i = 0; $i < 5; $i++):
                                             if ($i < round($rating)): ?>
                                                 <i class="bi bi-star-fill" style="color: #ffc107;"></i>
@@ -141,6 +145,9 @@ require_once BASE_PATH . '/src/components/Header.php';
                                     <a href="/events/view?id=<?php echo $event['id']; ?>" class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye me-1"></i>Vaata
                                     </a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="return deleteEvent(<?php echo (int)$event['id']; ?>)">
+                                        <i class="bi bi-trash me-1"></i>Kustuta
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -175,5 +182,58 @@ require_once BASE_PATH . '/src/components/Header.php';
         </div>
     </div>
 </div>
+
+<script>
+function deleteEvent(eventId) {
+    console.log('deleteEvent called with ID:', eventId);
+    
+    const message = 'Kas KINDEL oled, et soovid selle üritus KUSTUTADA?\n\nSeda ei saa tagasi võtta!';
+    const userConfirmed = confirm(message);
+    
+    console.log('User confirmed:', userConfirmed);
+    
+    if (!userConfirmed) {
+        console.log('Cancelled by user');
+        return false;
+    }
+    
+    console.log('Confirmed, deleting event:', eventId);
+    
+    const data = new FormData();
+    data.append('action', 'delete');
+    data.append('event_id', eventId);
+    
+    fetch('<?php echo SITE_URL; ?>/src/ajax/delete_event.php', {
+        method: 'POST',
+        body: data
+    })
+    .then(r => {
+        console.log('Status:', r.status);
+        return r.text(); // Read as text first
+    })
+    .then(text => {
+        console.log('Raw response:', text);
+        try {
+            const d = JSON.parse(text);
+            console.log('Parsed response:', d);
+            if (d.ok) {
+                alert('✓ Üritus kustutatud!');
+                location.reload();
+            } else {
+                alert('✗ Viga: ' + d.error);
+            }
+        } catch (e) {
+            console.error('JSON parse error:', e);
+            alert('Serveri viga: ' + text);
+        }
+    })
+    .catch(e => {
+        console.error('Fetch error:', e);
+        alert('Viga: ' + e);
+    });
+    
+    return false;
+}
+</script>
 
 <?php require_once BASE_PATH . '/src/components/Footer.php'; ?>

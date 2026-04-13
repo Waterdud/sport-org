@@ -54,35 +54,35 @@ require_once BASE_PATH . '/src/components/Header.php';
 <!-- Заголовок -->
 <div class="row mb-4">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>
-                <i class="bi bi-geo-alt text-primary me-2"></i>
-                Kohad mängimiseks
-            </h2>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="mb-1">
+                    <i class="bi bi-geo-alt text-primary me-2"></i>
+                    Kohad mängimiseks
+                </h1>
+                <p class="text-muted mb-0">Leia treningukohti oma lähikonnas</p>
+            </div>
             <?php if (isLoggedIn()): ?>
-                <a href="/locations/add" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-2"></i>Lisa koht
-                </a>
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#newLocationModal">
+                    <i class="bi bi-plus-circle me-1"></i>Lisa koht
+                </button>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
 <!-- Фильтры -->
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <form method="GET" action="/locations" class="row g-3">
-            <!-- Поиск -->
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" 
-                           class="form-control" 
-                           name="search" 
-                           value="<?php echo clean($search); ?>"
-                           placeholder="Otsi nime või aadressi järgi...">
-                </div>
+<div class="filters-card">
+    <form method="GET" action="/locations" class="row g-3">
+        <!-- Поиск -->
+        <div class="col-md-4 col-lg-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" class="form-control" 
+                       placeholder="Otsi nime või aadressi järgi..."
+                       value="<?php echo clean($search); ?>">
             </div>
+        </div>
             
             <!-- Город -->
             <div class="col-md-3">
@@ -102,13 +102,13 @@ require_once BASE_PATH . '/src/components/Header.php';
                 <select class="form-select" name="sport">
                     <option value="">Kõik spordialad</option>
                     <option value="Футбол" <?php echo $sportType === 'Футбол' ? 'selected' : ''; ?>>
-                        ⚽ Jalgpall
+                        Jalgpall
                     </option>
                     <option value="Волейбол" <?php echo $sportType === 'Волейбол' ? 'selected' : ''; ?>>
-                        🏐 Võrkpall
+                        Võrkpall
                     </option>
                     <option value="Баскетбол" <?php echo $sportType === 'Баскетбол' ? 'selected' : ''; ?>>
-                        🏀 Korvpall
+                        Korvpall
                     </option>
                 </select>
             </div>
@@ -217,16 +217,16 @@ require_once BASE_PATH . '/src/components/Header.php';
                             <i class="bi bi-building text-primary me-2"></i>
                             <small><?php echo clean($location['city']); ?></small>
                         </div>
-                        
                         <!-- Виды спорта -->
                         <div class="mb-3">
                             <?php foreach ($sports as $sport): ?>
                                 <?php
                                 $sport = trim($sport);
-                                $sportIcon = ['Футбол' => '⚽', 'Волейбол' => '🏐', 'Баскетбол' => '🏀'][$sport] ?? '🏅';
+                                $sportIcon = ['Jalgpall' => 'bi-soccer', 'Võrkpall' => 'bi-volleyball', 'Korvpall' => 'bi-basketball', 'Tennis' => 'bi-tennis', 'Ujumine' => 'bi-water'][$sport] ?? 'bi-award';
+                                $sportDisplay = $sport;
                                 ?>
                                 <span class="badge bg-primary me-1">
-                                    <?php echo $sportIcon; ?> <?php echo clean($sport); ?>
+                                    <i class="bi <?php echo $sportIcon; ?> me-1"></i><?php echo clean($sport); ?>
                                 </span>
                             <?php endforeach; ?>
                         </div>
@@ -302,6 +302,79 @@ require_once BASE_PATH . '/src/components/Header.php';
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Loo uus koht -->
+<div class="modal fade" id="newLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-geo-alt me-2"></i>Lisa uus treningukohtt
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="addLocationForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Koha nimi <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="location_name" class="form-control" 
+                               placeholder="nt. Tallinna Linnastaadion" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Aadress <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="location_address" class="form-control" 
+                               placeholder="nt. Jakobi 2, Tallinn" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Linn <span class="text-danger">*</span>
+                        </label>
+                        <select name="location_city" class="form-select" required>
+                            <option value="">Vali linn...</option>
+                            <option value="Tallinn">🏙️ Tallinn</option>
+                            <option value="Tartu">🏫 Tartu</option>
+                            <option value="Pärnu">🏖️ Pärnu</option>
+                            <option value="Narva">🏛️ Narva</option>
+                            <option value="Rakvere">🏞️ Rakvere</option>
+                            <option value="Haapsalu">⛵ Haapsalu</option>
+                            <option value="Kuressaare">🏝️ Kuressaare</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Kirjeldus
+                        </label>
+                        <textarea name="location_description" class="form-control" rows="3"
+                                  placeholder="Lisa koha kirjeldus, nt. sisseseadmine, eriolevused jne."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Spordialad
+                        </label>
+                        <input type="text" name="location_sport_types" class="form-control" 
+                               placeholder="nt. Jalgpall, Võrkpall" value="Jalgpall" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Tühista
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>Salvesta koht
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

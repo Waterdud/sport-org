@@ -1,35 +1,35 @@
 <?php
 /**
- * HELPERS - Вспомогательные функции
+ * Helper functions
  * 
- * Аутентификация, валидация, переводы, утилиты
+ * Authentication, validation, utilities
  */
 
-// ===== АУТЕНТИФИКАЦИЯ =====
+// ===== AUTHENTICATION =====
 
 /**
- * Проверка авторизации пользователя
+ * Check if user is logged in
  */
 function isLoggedIn() {
     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 /**
- * Получить ID текущего пользователя
+ * Get current user ID
  */
 function getCurrentUserId() {
     return $_SESSION['user_id'] ?? null;
 }
 
 /**
- * Получить данные текущего пользователя
+ * Get current user data
  */
 function getCurrentUser() {
     return $_SESSION['user'] ?? null;
 }
 
 /**
- * Требовать авторизацию (редирект на login если необходимо)
+ * Require authentication (redirect to login if needed)
  */
 function requireAuth() {
     if (!isLoggedIn()) {
@@ -40,7 +40,7 @@ function requireAuth() {
 }
 
 /**
- * Редирект на страницу
+ * Redirect to page
  */
 function redirect($url) {
     if (strpos($url, 'http') === false) {
@@ -50,10 +50,10 @@ function redirect($url) {
     exit();
 }
 
-// ===== БЕЗОПАСНОСТЬ =====
+// ===== SECURITY =====
 
 /**
- * Очистка от XSS атак (экранирование HTML)
+ * Clean from XSS attacks (escape HTML)
  */
 function clean($data) {
     if (is_array($data)) {
@@ -63,41 +63,18 @@ function clean($data) {
 }
 
 /**
- * Валидация email
+ * Validate email
  */
 function isValidEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
 /**
- * Валидация пароля (минимум 6 символов)
+ * Validate password (minimum 6 characters)
  */
 function isValidPassword($password) {
     return strlen($password) >= 6;
 }
-
-// ===== ПЕРЕВОДЫ (ЭСТОНСКИЙ) =====
-
-/**
- * Переводы событий
- */
-function translateEventStatus($status) {
-    $translations = [
-        'Открыто' => 'Avatud',
-        'Закрыто' => 'Suletud',
-        'Завершено' => 'Lõpetatud',
-        'Отменено' => 'Tühistatud',
-        'active' => 'Avatud',
-        'closed' => 'Suletud',
-        'completed' => 'Lõpetatud',
-        'cancelled' => 'Tühistatud'
-    ];
-    return $translations[$status] ?? $status;
-}
-
-/**
- * Переводы статусов участников
- */
 function translateParticipantStatus($status) {
     $translations = [
         'Записан' => 'Registreeritud',

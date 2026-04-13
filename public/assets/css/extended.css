@@ -1,0 +1,360 @@
+/**
+ * SportOrg - Дополнительные стили для улучшенного функционала
+ */
+
+/* ==================== Галерея мест проведения ==================== */
+.location-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+}
+
+.gallery-item-delete {
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* ==================== Статистика события ==================== */
+.event-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ==================== Звезды рейтинга ==================== */
+.star-rating {
+    display: inline-flex;
+    gap: 0.25rem;
+    font-size: 1.5rem;
+}
+
+.star-rating .star {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #d1d5db;
+}
+
+.star-rating .star.active,
+.star-rating .star:hover {
+    color: #fbbf24;
+    transform: scale(1.2);
+}
+
+/* ==================== Слайдеры (Timeline) ==================== */
+.timeline {
+    position: relative;
+    padding: 1rem 0;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    bottom: -2rem;
+    width: 2px;
+    background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-marker {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-content {
+    flex: 1;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+/* ==================== Быстрые действия (Quick Actions) ==================== */
+.quick-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    background: var(--gray-100);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* ==================== Условные блоки (Chips) ==================== */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.chip i {
+    font-size: 1rem;
+}
+
+.chip-removable {
+    cursor: pointer;
+    padding-right: 0.5rem;
+}
+
+.chip-close {
+    cursor: pointer;
+    margin-left: 0.25rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.chip-close:hover {
+    opacity: 1;
+}
+
+/* ==================== Карточки активности ==================== */
+.activity-item {
+    padding: 1rem;
+    border-left: 4px solid var(--primary-color);
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.activity-text {
+    margin: 0.5rem 0 0 0;
+    color: var(--dark-color);
+}
+
+/* ==================== Валидация форм ==================== */
+.was-validated .form-control:valid {
+    border-color: var(--success-color);
+}
+
+.was-validated .form-control:invalid {
+    border-color: var(--danger-color);
+}
+
+.form-control.is-valid {
+    border-color: var(--success-color);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+}
+
+.valid-feedback,
+.invalid-feedback {
+    display: block;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.valid-feedback {
+    color: var(--success-color);
+}
+
+.invalid-feedback {
+    color: var(--danger-color);
+}
+
+/* ==================== Всплывающие подсказки (Tooltips) ==================== */
+.tooltip-inner {
+    background: var(--dark-color);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.tooltip-arrow::before {
+    border-top-color: var(--dark-color);
+}
+
+/* ==================== Прогресс-бары ==================== */
+.progress {
+    height: 8px;
+    border-radius: 10px;
+    background: var(--gray-200);
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #2563eb 0%, #0891b2 100%);
+    transition: width 0.3s ease;
+    height: 100%;
+}
+
+/* ==================== Аккордеоны ==================== */
+.accordion {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.accordion-button {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+    color: white;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    background: white;
+}
+
+/* ==================== Спиннеры загрузки ==================== */
+.spinner-border {
+    border-width: 0.3em;
+    border-color: var(--gray-200);
+    border-right-color: var(--primary-color);
+}
+
+/* ==================== Отзывчивые сетки ==================== */
+@media (max-width: 768px) {
+    .location-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .event-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .location-gallery {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .event-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .quick-action-btn {
+        width: 100%;
+    }
+}
